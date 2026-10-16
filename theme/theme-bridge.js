@@ -27,7 +27,12 @@
             // localStorage may be unavailable
         }
 
-        var theme = DEFAULT_THEME;
+        var theme = {};
+        for (var k in DEFAULT_THEME) {
+            if (DEFAULT_THEME.hasOwnProperty(k)) {
+                theme[k] = DEFAULT_THEME[k];
+            }
+        }
         if (saved) {
             try {
                 var parsed = JSON.parse(saved);
