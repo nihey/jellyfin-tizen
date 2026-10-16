@@ -1,0 +1,184 @@
+/* theme/components/overlays.css */
+
+/* Modal / dialog backdrop */
+.dialogBackdrop {
+    background: rgba(0, 0, 0, 0.85) !important;
+    backdrop-filter: blur(8px) !important;
+}
+
+/* Modal container */
+.dialogContainer {
+    background: var(--bg-surface) !important;
+    border-radius: var(--card-radius) !important;
+    border: 1px solid rgba(255,255,255,0.05) !important;
+    box-shadow: 0 24px 48px rgba(0,0,0,0.6) !important;
+}
+
+/* Toast notification container */
+.jf-toast-container {
+    position: fixed !important;
+    top: var(--space-lg) !important;
+    right: var(--space-lg) !important;
+    z-index: 9999 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--space-sm) !important;
+    pointer-events: none !important;
+}
+
+/* Individual toast */
+.jf-toast {
+    background: var(--bg-surface) !important;
+    color: var(--text-primary) !important;
+    border-radius: var(--card-radius) !important;
+    padding: var(--space-sm) var(--space-md) !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important;
+    border-left: 4px solid var(--accent-color) !important;
+    font-size: 0.875rem !important;
+    max-width: 320px !important;
+    pointer-events: auto !important;
+}
+
+.jf-toast.jf-toast-error {
+    border-left-color: #ff4444 !important;
+}
+
+.jf-toast.jf-toast-warn {
+    border-left-color: #ffaa00 !important;
+}
+
+.jf-toast.jf-toast-success {
+    border-left-color: #00cc66 !important;
+}
+
+/* Error screen */
+.jf-error-screen {
+    position: fixed !important;
+    inset: 0 !important;
+    background: var(--bg-primary) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 10000 !important;
+    padding: var(--space-xl) !important;
+    text-align: center !important;
+}
+
+.jf-error-screen .jf-error-code {
+    font-family: monospace !important;
+    color: var(--text-muted) !important;
+    font-size: 0.75rem !important;
+    margin-bottom: var(--space-sm) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+}
+
+.jf-error-screen .jf-error-title {
+    font-size: 1.5rem !important;
+    font-weight: 600 !important;
+    margin-bottom: var(--space-md) !important;
+}
+
+.jf-error-screen .jf-error-message {
+    color: var(--text-secondary) !important;
+    margin-bottom: var(--space-lg) !important;
+    max-width: 480px !important;
+}
+
+.jf-error-screen .jf-error-actions button {
+    border-radius: 999px !important;
+    padding: var(--space-sm) var(--space-lg) !important;
+    font-weight: 600 !important;
+    margin: 0 var(--space-sm) !important;
+}
+
+.jf-error-screen .jf-error-details {
+    margin-top: var(--space-lg) !important;
+    text-align: left !important;
+    background: var(--bg-surface) !important;
+    border-radius: var(--card-radius) !important;
+    padding: var(--space-md) !important;
+    max-width: 640px !important;
+    width: 100% !important;
+    font-family: monospace !important;
+    font-size: 0.75rem !important;
+    color: var(--text-muted) !important;
+    overflow: auto !important;
+    max-height: 30vh !important;
+    display: none !important;
+}
+
+.jf-error-screen .jf-error-details.visible {
+    display: block !important;
+}
+
+/* Debug overlay panel */
+.jf-debug-overlay {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 40vh !important;
+    background: var(--bg-overlay) !important;
+    backdrop-filter: blur(16px) !important;
+    border-top: 1px solid rgba(255,255,255,0.08) !important;
+    z-index: 9998 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding: var(--space-md) !important;
+    font-family: monospace !important;
+    font-size: 0.75rem !important;
+    color: var(--text-secondary) !important;
+}
+
+.jf-debug-overlay.hidden {
+    display: none !important;
+}
+
+.jf-debug-overlay .jf-debug-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: var(--space-sm) !important;
+    padding-bottom: var(--space-sm) !important;
+    border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+}
+
+.jf-debug-overlay .jf-debug-title {
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+}
+
+.jf-debug-overlay .jf-debug-close {
+    background: none !important;
+    border: none !important;
+    color: var(--text-muted) !important;
+    cursor: pointer !important;
+    font-size: 1rem !important;
+}
+
+.jf-debug-overlay .jf-debug-logs {
+    flex: 1 !important;
+    overflow-y: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+}
+
+.jf-debug-overlay .jf-debug-log {
+    padding: 2px 0 !important;
+    border-bottom: 1px solid rgba(255,255,255,0.03) !important;
+}
+
+.jf-debug-overlay .jf-debug-log-error {
+    color: #ff6b6b !important;
+}
+
+.jf-debug-overlay .jf-debug-log-warn {
+    color: #ffd93d !important;
+}
+
+.jf-debug-overlay .jf-debug-log-debug {
+    color: #6bcb77 !important;
+}
