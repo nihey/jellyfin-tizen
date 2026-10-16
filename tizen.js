@@ -187,6 +187,13 @@
         tizen.tvinputdevice.registerKey('MediaTrackNext');
         tizen.tvinputdevice.registerKey('MediaRewind');
         tizen.tvinputdevice.registerKey('MediaFastForward');
+
+        // Register star key for debug overlay (if supported)
+        try {
+            tizen.tvinputdevice.registerKey('ColorF0Red');
+        } catch (e) {
+            // Some keys may not be available on all remotes
+        }
     });
 
     function updateKeys() {
