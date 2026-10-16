@@ -71,6 +71,29 @@ function modifyIndex() {
             meta.setAttribute('content', 'default-src * \'self\' \'unsafe-inline\' \'unsafe-eval\' data: gap: file: filesystem: ws: wss:;');
             this.head.appendChild(meta);
 
+            // inject theme CSS files
+            const themeCss = [
+                'theme/variables.css',
+                'theme/animations.css',
+                'theme/cinematic.css',
+                'theme/components/cards.css',
+                'theme/components/navigation.css',
+                'theme/components/hero.css',
+                'theme/components/detail.css',
+                'theme/components/overlays.css'
+            ];
+            themeCss.forEach((cssPath) => {
+                if (fs.existsSync(cssPath)) {
+                    const link = this.createElement('link');
+                    link.setAttribute('rel', 'stylesheet');
+                    link.setAttribute('href', cssPath);
+                    this.head.appendChild(link);
+                    console.debug('Injected theme CSS:', cssPath);
+                } else {
+                    console.warn('Theme CSS not found:', cssPath);
+                }
+            });
+
             // Search for injected main.bundle
             let apploader = this.querySelector('script[src^=main]');
 
@@ -96,6 +119,24 @@ function modifyIndex() {
             }
 
             const injectTarget = apploader.parentNode;
+
+            // inject debug JS files (before webapis so they load early)
+            const debugJs = [
+                'debug/logger.js',
+                'debug/error-handler.js',
+                'debug/debug-overlay.js',
+                'theme/theme-bridge.js'
+            ];
+            debugJs.forEach((jsPath) => {
+                if (fs.existsSync(jsPath)) {
+                    const script = this.createElement('script');
+                    script.setAttribute('src', jsPath);
+                    injectTarget.insertBefore(script, apploader);
+                    console.debug('Injected debug JS:', jsPath);
+                } else {
+                    console.warn('Debug JS not found:', jsPath);
+                }
+            });
 
             // inject webapis.js
             const webapis = this.createElement('script');
