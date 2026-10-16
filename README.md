@@ -122,3 +122,38 @@ tizen package -t wgt -o . -- .buildResult
    tizen install -n Jellyfin.wgt -t UE65NU7400
    ```
    > Specify target with `-t` option. Use `sdb devices` to list them.
+
+## UI Customization & Debug
+
+This fork includes a cinematic Netflix-style theme and a debug system.
+
+### Theme Features
+- Dark cinematic color palette with customizable accent color
+- Horizontal scrollable rows with snap-to-focus
+- Hero banners on home and detail pages
+- Adjustable grid density (compact / comfortable / spacious)
+- Smooth page transitions and skeleton loaders
+
+### Customization
+Theme settings are stored in `localStorage` under key `at-flix-theme`.
+You can customize:
+- Background and surface colors
+- Accent color
+- Card border radius
+- Focus scale
+- Animation speed
+- Grid density
+
+### Debug Overlay
+Press the `*` (star) key on the Samsung remote (or F12 in browser) to open the debug overlay.
+It shows:
+- Last 100 log entries
+- Currently focused element info
+- Performance metrics
+
+### Error Handling
+Errors display a full-screen page with:
+- Friendly error message
+- Error code (e.g., `E1001`)
+- Retry button
+- Expandable technical details

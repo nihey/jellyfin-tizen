@@ -24,7 +24,7 @@
     var AppInfo = {
         deviceId: getDeviceId(),
         deviceName: 'Samsung Smart TV',
-        appName: 'Jellyfin for Tizen',
+        appName: 'AT Flix',
         appVersion: tizen.application.getCurrentApplication().appInfo.version
     };
 
