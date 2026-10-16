@@ -1,0 +1,44 @@
+/* theme/variables.css
+   AT Flix Theme Variables
+   Overridable via localStorage (key: at-flix-theme)
+   This file MUST load first so variables are available for all other theme CSS.
+*/
+
+:root {
+    /* Backgrounds */
+    --bg-primary: #0a0a0f;
+    --bg-surface: #141419;
+    --bg-overlay: rgba(10, 10, 15, 0.85);
+
+    /* Text */
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0b0;
+    --text-muted: #6a6a7a;
+
+    /* Accent */
+    --accent-color: #e50914;
+    --accent-hover: #ff1a25;
+
+    /* Focus */
+    --focus-ring: 0 0 0 3px var(--accent-color), 0 0 12px var(--accent-color);
+    --focus-scale: 1.08;
+
+    /* Cards */
+    --card-radius: 6px;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+
+    /* Spacing (8px grid) */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+
+    /* Animation */
+    --animation-speed: 1.0;
+    --transition-fast: calc(150ms / var(--animation-speed));
+    --transition-base: calc(250ms / var(--animation-speed));
+    --transition-slow: calc(400ms / var(--animation-speed));
+}
+
+/* Runtime override: read localStorage and apply as inline style on html element */
