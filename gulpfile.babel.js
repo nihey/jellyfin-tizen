@@ -61,6 +61,12 @@ function copy() {
         .pipe(gulp.dest(paths.assets.dest));
 }
 
+// Copy theme and debug assets
+function copyLocalAssets() {
+    return gulp.src(['theme/**/*', 'debug/**/*'], { encoding: false, base: '.' })
+        .pipe(gulp.dest(paths.assets.dest));
+}
+
 // Add required tags to index.html
 function modifyIndex() {
     return gulp.src(paths.index.src)
@@ -163,13 +169,14 @@ function modifyIndex() {
 const build = gulp.series(
     clean,
     searchFonts,
-    gulp.parallel(copy, modifyIndex)
+    gulp.parallel(copy, copyLocalAssets, modifyIndex)
 );
 
 // Export tasks so they can be run individually
 export {
     clean,
     copy,
+    copyLocalAssets,
     modifyIndex
 };
 // Export default task
