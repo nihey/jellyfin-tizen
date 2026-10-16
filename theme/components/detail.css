@@ -1,0 +1,82 @@
+/* theme/components/detail.css */
+
+/* Detail page backdrop */
+.itemBackdrop {
+    position: relative !important;
+    height: 70vh !important;
+    overflow: hidden !important;
+    border-radius: 0 0 var(--card-radius) var(--card-radius) !important;
+}
+
+.itemBackdrop .itemBackdropImage {
+    object-fit: cover !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Gradient overlay on backdrop */
+.itemBackdrop::after {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: linear-gradient(
+        to top,
+        var(--bg-primary) 0%,
+        rgba(10, 10, 15, 0.8) 50%,
+        rgba(10, 10, 15, 0.3) 100%
+    ) !important;
+    pointer-events: none !important;
+}
+
+/* Info panel floating over backdrop */
+.itemDetailInfo {
+    position: relative !important;
+    z-index: 2 !important;
+    margin-top: -20vh !important;
+    padding: var(--space-xl) !important;
+}
+
+/* Detail title */
+.itemDetailInfo .itemName {
+    font-size: 2.25rem !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: var(--space-sm) !important;
+}
+
+/* Metadata line (year, rating, runtime) */
+.itemDetailInfo .itemMiscInfo {
+    color: var(--text-secondary) !important;
+    font-size: 0.875rem !important;
+    margin-bottom: var(--space-md) !important;
+}
+
+/* Play / action buttons */
+.itemDetailInfo .mainDetailButtons button {
+    border-radius: 999px !important;
+    padding: var(--space-sm) var(--space-lg) !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+}
+
+.itemDetailInfo .mainDetailButtons button:focus {
+    box-shadow: var(--focus-ring) !important;
+    transform: scale(1.05) !important;
+}
+
+/* Primary play button */
+.itemDetailInfo .mainDetailButtons .fab {
+    background: var(--accent-color) !important;
+    color: #fff !important;
+}
+
+.itemDetailInfo .mainDetailButtons .fab:focus {
+    background: var(--accent-hover) !important;
+}
+
+/* Cast / Similar rows */
+#castContent .card,
+#similarContent .card {
+    width: 140px !important;
+}
