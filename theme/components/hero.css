@@ -1,0 +1,84 @@
+/* theme/components/hero.css */
+
+/* Hero banner section on home */
+.jf-hero,
+.heroSection,
+.backdropContainer {
+    position: relative !important;
+    min-height: 50vh !important;
+    display: flex !important;
+    align-items: flex-end !important;
+    padding: var(--space-xl) !important;
+    margin-bottom: var(--space-lg) !important;
+}
+
+/* Hero backdrop image */
+.jf-hero .backdropImage,
+.backdropImage {
+    position: absolute !important;
+    inset: 0 !important;
+    object-fit: cover !important;
+    z-index: 0 !important;
+    border-radius: var(--card-radius) !important;
+    overflow: hidden !important;
+}
+
+/* Gradient overlay for text legibility */
+.jf-hero::after,
+.backdropContainer::after {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: linear-gradient(
+        to top,
+        var(--bg-primary) 0%,
+        rgba(10, 10, 15, 0.7) 40%,
+        rgba(10, 10, 15, 0.3) 100%
+    ) !important;
+    z-index: 1 !important;
+    border-radius: var(--card-radius) !important;
+    pointer-events: none !important;
+}
+
+/* Hero text content */
+.jf-hero .heroText,
+.heroText {
+    position: relative !important;
+    z-index: 2 !important;
+    max-width: 50% !important;
+}
+
+.jf-hero .heroText h1,
+.heroText h1 {
+    font-size: 2.5rem !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: var(--space-md) !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5) !important;
+}
+
+.jf-hero .heroText p,
+.heroText p {
+    color: var(--text-secondary) !important;
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: var(--space-lg) !important;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5) !important;
+}
+
+/* Hero action buttons */
+.jf-hero .heroActions button,
+.heroActions button {
+    border-radius: 999px !important;
+    padding: var(--space-sm) var(--space-lg) !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    transition: transform var(--transition-fast), background var(--transition-fast) !important;
+}
+
+.jf-hero .heroActions button:focus,
+.heroActions button:focus {
+    transform: scale(1.05) !important;
+    box-shadow: var(--focus-ring) !important;
+}
