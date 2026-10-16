@@ -1,0 +1,85 @@
+/* theme/animations.css */
+
+/* Page transition: fade in + slight rise */
+@keyframes pageEnter {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Skeleton shimmer */
+@keyframes skeletonShimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* Backdrop crossfade */
+@keyframes backdropFade {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Toast slide-in */
+@keyframes toastSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Toast slide-out */
+@keyframes toastSlideOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+/* Shared transition classes */
+.jf-transition-page {
+    animation: pageEnter var(--transition-base) ease-out forwards;
+}
+
+.jf-skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--bg-surface) 25%,
+        #2a2a35 50%,
+        var(--bg-surface) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeletonShimmer calc(1.5s / var(--animation-speed)) linear infinite;
+}
+
+.jf-backdrop-fade {
+    animation: backdropFade var(--transition-slow) ease-in-out forwards;
+}
+
+.jf-toast-enter {
+    animation: toastSlideIn calc(250ms / var(--animation-speed)) ease-out forwards;
+}
+
+.jf-toast-exit {
+    animation: toastSlideOut calc(200ms / var(--animation-speed)) ease-in forwards;
+}
