@@ -1,7 +1,7 @@
 /* theme/animations.css */
 
 /* Page transition: fade in + slight rise */
-@keyframes pageEnter {
+@keyframes page-enter {
     from {
         opacity: 0;
         transform: translateY(30px);
@@ -13,7 +13,7 @@
 }
 
 /* Skeleton shimmer */
-@keyframes skeletonShimmer {
+@keyframes skeleton-shimmer {
     0% {
         background-position: -200% 0;
     }
@@ -23,7 +23,7 @@
 }
 
 /* Backdrop crossfade */
-@keyframes backdropFade {
+@keyframes backdrop-fade {
     from {
         opacity: 0;
     }
@@ -33,7 +33,7 @@
 }
 
 /* Toast slide-in */
-@keyframes toastSlideIn {
+@keyframes toast-slide-in {
     from {
         opacity: 0;
         transform: translateY(-20px);
@@ -45,7 +45,7 @@
 }
 
 /* Toast slide-out */
-@keyframes toastSlideOut {
+@keyframes toast-slide-out {
     from {
         opacity: 1;
         transform: translateY(0);
@@ -58,28 +58,28 @@
 
 /* Shared transition classes */
 .jf-transition-page {
-    animation: pageEnter var(--transition-base) ease-out forwards;
+    animation: page-enter var(--transition-base, 300ms) ease-out forwards;
 }
 
 .jf-skeleton {
     background: linear-gradient(
         90deg,
         var(--bg-surface) 25%,
-        #2a2a35 50%,
+        var(--skeleton-highlight) 50%,
         var(--bg-surface) 75%
     );
     background-size: 200% 100%;
-    animation: skeletonShimmer calc(1.5s / var(--animation-speed)) linear infinite;
+    animation: skeleton-shimmer calc(1.5s / var(--animation-speed, 1)) linear infinite;
 }
 
 .jf-backdrop-fade {
-    animation: backdropFade var(--transition-slow) ease-in-out forwards;
+    animation: backdrop-fade var(--transition-slow, 400ms) ease-in-out forwards;
 }
 
 .jf-toast-enter {
-    animation: toastSlideIn calc(250ms / var(--animation-speed)) ease-out forwards;
+    animation: toast-slide-in calc(250ms / var(--animation-speed, 1)) ease-out forwards;
 }
 
 .jf-toast-exit {
-    animation: toastSlideOut calc(200ms / var(--animation-speed)) ease-in forwards;
+    animation: toast-slide-out calc(200ms / var(--animation-speed, 1)) ease-in forwards;
 }

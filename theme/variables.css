@@ -39,6 +39,7 @@
     --transition-fast: calc(150ms / var(--animation-speed));
     --transition-base: calc(250ms / var(--animation-speed));
     --transition-slow: calc(400ms / var(--animation-speed));
+    --skeleton-highlight: #2a2a35;
 }
 
 /* Runtime override: read localStorage and apply as inline style on html element */
