@@ -1,0 +1,64 @@
+/* theme/components/navigation.css */
+
+/* Top navigation bar */
+.skinHeader {
+    background: linear-gradient(to bottom, var(--bg-primary) 0%, transparent 100%) !important;
+    border-bottom: none !important;
+    backdrop-filter: none !important;
+    transition: opacity var(--transition-base) ease-out !important;
+}
+
+.skinHeader.scrolled {
+    background: var(--bg-overlay) !important;
+    backdrop-filter: blur(12px) !important;
+}
+
+/* Hide top bar when user scrolls down (TV auto-hide feel) */
+.skinHeader.hidden {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Focus ring for nav items */
+.headerButton,
+.navMenuOption,
+.raised {
+    border-radius: var(--card-radius) !important;
+    transition: background var(--transition-fast), box-shadow var(--transition-fast) !important;
+}
+
+.headerButton:focus,
+.navMenuOption:focus,
+.raised:focus {
+    box-shadow: var(--focus-ring) !important;
+    background: var(--bg-surface) !important;
+}
+
+/* Sidebar */
+.mainDrawer {
+    background: var(--bg-surface) !important;
+    border-right: 1px solid rgba(255,255,255,0.05) !important;
+}
+
+.mainDrawer .navMenuOption {
+    border-radius: 0 var(--card-radius) var(--card-radius) 0 !important;
+    margin-right: var(--space-sm) !important;
+}
+
+.mainDrawer .navMenuOption:focus {
+    background: var(--accent-color) !important;
+    color: #fff !important;
+}
+
+/* Scrollbar (minimal) */
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--text-muted);
+    border-radius: 2px;
+}
