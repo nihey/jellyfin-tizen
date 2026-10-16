@@ -1,0 +1,94 @@
+/* theme/cinematic.css
+   High-level layout overrides for the cinematic Netflix-style experience.
+   This file ties together all component styles.
+*/
+
+/* Global background override */
+body,
+.backgroundContainer,
+.skinContainer {
+    background: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Page content transitions */
+.view,
+.page {
+    transition: opacity var(--transition-base) ease-out !important;
+}
+
+/* Scrollable rows: horizontal snap */
+.itemsContainer,
+.vertical-wrap,
+.scrollSlider {
+    scroll-behavior: smooth !important;
+}
+
+/* Ensure scroll snap on horizontal rows */
+.itemsContainer.horizontal-wrap {
+    scroll-snap-type: x mandatory !important;
+}
+
+.itemsContainer.horizontal-wrap .card {
+    scroll-snap-align: start !important;
+}
+
+/* Reduce motion if user prefers */
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --animation-speed: 0.001;
+    }
+}
+
+/* Loading spinner replacement with skeleton */
+.spinner {
+    background: none !important;
+    border: none !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.spinner::after {
+    content: '' !important;
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: var(--card-radius) !important;
+    background: linear-gradient(
+        90deg,
+        var(--bg-surface, #141419) 25%,
+        var(--skeleton-highlight, #2a2a35) 50%,
+        var(--bg-surface, #141419) 75%
+    ) !important;
+    background-size: 200% 100% !important;
+    animation: skeleton-shimmer calc(1.5s / var(--animation-speed, 1)) linear infinite !important;
+}
+
+/* Emby button overrides for pill shape */
+.emby-button {
+    border-radius: 999px !important;
+}
+
+/* Input fields */
+.emby-input,
+.emby-textarea {
+    background: var(--bg-surface) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    border-radius: var(--card-radius) !important;
+    color: var(--text-primary) !important;
+}
+
+.emby-input:focus,
+.emby-textarea:focus {
+    border-color: var(--accent-color) !important;
+    box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.3) !important;
+}
+
+/* Selection indicators */
+.checkboxIcon-checked {
+    background: var(--accent-color) !important;
+}
+
+.mdl-slider::-webkit-slider-thumb {
+    background: var(--accent-color) !important;
+}
