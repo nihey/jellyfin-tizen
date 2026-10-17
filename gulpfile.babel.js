@@ -71,6 +71,16 @@ function copyLocalAssets() {
 function modifyIndex() {
     return gulp.src(paths.index.src)
         .pipe(dom(function() {
+            // inject boot-probe CSS FIRST (so we can see if app is loading)
+            const bootProbeCss = 'theme/boot-probe.css';
+            if (fs.existsSync(bootProbeCss)) {
+                const bootProbeLink = this.createElement('link');
+                bootProbeLink.setAttribute('rel', 'stylesheet');
+                bootProbeLink.setAttribute('href', bootProbeCss);
+                this.head.insertBefore(bootProbeLink, this.head.firstChild);
+                console.debug('Injected boot-probe CSS');
+            }
+
             // inject CSP meta tag
             const meta = this.createElement('meta');
             meta.setAttribute('http-equiv', 'Content-Security-Policy');
@@ -125,6 +135,15 @@ function modifyIndex() {
             }
 
             const injectTarget = apploader.parentNode;
+
+            // inject boot-probe JS FIRST (to diagnose black-screen issues)
+            const bootProbeJs = 'debug/boot-probe.js';
+            if (fs.existsSync(bootProbeJs)) {
+                const bootProbeScript = this.createElement('script');
+                bootProbeScript.setAttribute('src', bootProbeJs);
+                injectTarget.insertBefore(bootProbeScript, apploader);
+                console.debug('Injected boot-probe JS');
+            }
 
             // inject debug JS files (before webapis so they load early)
             const debugJs = [

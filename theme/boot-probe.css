@@ -1,0 +1,28 @@
+/* boot-probe.css
+   Ultra-simple styles that show immediately if the app is booting.
+   Loaded before any other CSS so we can see if JS/CSS is loading at all.
+*/
+
+#atflix-boot-probe {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 999999 !important;
+    background: #e50914 !important;
+    color: #fff !important;
+    padding: 24px 48px !important;
+    border-radius: 8px !important;
+    font-family: system-ui, sans-serif !important;
+    font-size: 24px !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+    pointer-events: none !important;
+    opacity: 1 !important;
+    display: block !important;
+}
+
+#atflix-boot-probe.hidden {
+    opacity: 0 !important;
+    display: none !important;
+}
