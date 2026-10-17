@@ -164,6 +164,30 @@ tizen install -n ATFlix.wgt -t QN55Q70AAGXZD
 
 ---
 
+## Screenshots
+
+### Home Screen
+Cinematic hero banner with horizontal scrollable poster rows and snap-to-focus.
+
+![Home Screen](screenshots/home.png)
+
+### Detail Page
+Full-bleed backdrop with floating info panel, cast row, and similar items.
+
+![Detail Page](screenshots/detail.png)
+
+### Error Handling
+Explicit error screen with friendly message, error code, retry button, and expandable technical details.
+
+![Error Screen](screenshots/error.png)
+
+### Debug Overlay
+Toggle with the `*` (star) key on your Samsung remote. Shows last 100 logs, focused element info, and performance metrics.
+
+![Debug Overlay](screenshots/debug.png)
+
+---
+
 ## UI Customization & Debug
 
 This fork includes a cinematic Netflix-style theme and a debug system.
