@@ -1,17 +1,62 @@
 /* theme/components/overlays.css */
 
-/* Modal / dialog backdrop */
+/* Modal / dialog backdrop (no backdrop-filter: a full-screen blur stutters on TV GPUs) */
 .dialogBackdrop {
     background: rgba(0, 0, 0, 0.85) !important;
-    backdrop-filter: blur(8px) !important;
 }
 
-/* Modal container */
-.dialogContainer {
+/* Dialog box (.dialogContainer is jellyfin's full-screen centering wrapper, leave it alone) */
+.dialog:not(.dialog-fullscreen) {
     background: var(--bg-surface) !important;
     border-radius: var(--card-radius) !important;
-    border: 1px solid rgba(255,255,255,0.05) !important;
-    box-shadow: 0 24px 48px rgba(0,0,0,0.6) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Menus and lists: focused row is white with dark text */
+.layout-tv .actionSheetMenuItem.show-focus:focus,
+.layout-tv .listItem.show-focus:focus {
+    background: var(--focus-color) !important;
+    color: #000 !important;
+}
+
+/* TV alert (theme/tv-alert.js replaces the native alert() popup) */
+.atf-alert {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.atf-alert-box {
+    background: var(--bg-surface);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--card-radius);
+    padding: 1.5em 2em;
+    max-width: 40em;
+    text-align: center;
+}
+
+.atf-alert-text {
+    white-space: pre-wrap;
+    font-size: 1.15em;
+    line-height: 1.5;
+    margin-bottom: 1.25em;
+}
+
+.atf-alert-ok {
+    font: inherit;
+    font-weight: 600;
+    border: 0;
+    border-radius: var(--card-radius);
+    padding: 0.6em 2.5em;
+    background: var(--focus-color);
+    color: #000;
 }
 
 /* Toast notification container */
@@ -94,10 +139,17 @@
 }
 
 .jf-error-screen .jf-error-actions button {
-    border-radius: 999px !important;
+    border-radius: var(--card-radius) !important;
     padding: var(--space-sm) var(--space-lg) !important;
     font-weight: 600 !important;
     margin: 0 var(--space-sm) !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+    color: var(--text-primary) !important;
+}
+
+.jf-error-screen .jf-error-actions button:focus {
+    background: var(--focus-color) !important;
+    color: #000 !important;
 }
 
 .jf-error-screen .jf-error-details {
@@ -128,7 +180,6 @@
     right: 0 !important;
     height: 40vh !important;
     background: var(--bg-overlay) !important;
-    backdrop-filter: blur(16px) !important;
     border-top: 1px solid rgba(255,255,255,0.08) !important;
     z-index: 9998 !important;
     display: flex !important;

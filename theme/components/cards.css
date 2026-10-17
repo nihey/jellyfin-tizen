@@ -1,56 +1,49 @@
-/* Card container (poster) */
-.jf-card,
-.cardContent,
-.cardScalable {
-    border-radius: var(--card-radius) !important;
-    overflow: hidden !important;
-    transition: transform var(--transition-fast) cubic-bezier(0.25, 0.1, 0.25, 1.0),
-                box-shadow var(--transition-fast) ease-out !important;
-    will-change: transform;
+/* theme/components/cards.css
+   Posters. jellyfin-web treats every TV as a slow device: cards never zoom and
+   focus is a thick accent border around the poster (.cardScalable keeps a
+   transparent 0.5em border for it). We keep that cheap no-animation model and
+   swap the thick border for a thin white ring hugging the image.
+*/
+
+.cardScalable,
+.cardImageContainer,
+.cardContent {
+    border-radius: var(--card-radius);
 }
 
-/* Focused / hovered card */
-.jf-card:focus,
-.jf-card.focused,
-.card:focus,
-.card:focus-within,
-.cardContent-button:focus,
-.cardContent-button.focused {
-    transform: scale(var(--focus-scale)) !important;
-    box-shadow: var(--focus-ring), var(--card-shadow) !important;
-    z-index: 10 !important;
+/* Outranks the theme's `.card:focus .cardBox:not(.visualCardBox) .cardScalable`,
+   which jellyfin injects at runtime after our stylesheets */
+.layout-tv .card.show-focus:focus .cardBox:not(.visualCardBox) .cardScalable,
+.layout-tv .card.show-focus:focus .cardBox.visualCardBox {
+    border-color: transparent !important;
 }
 
-/* Card image */
-.jf-card .cardImage,
-.cardImage {
-    border-radius: var(--card-radius) !important;
+.layout-tv .card.show-focus:focus .cardImageContainer {
+    box-shadow: var(--focus-ring);
 }
 
-/* Card text overlay (title) */
-.jf-card .cardText,
+/* Titles under posters: quiet until the card is focused */
 .cardText {
-    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, transparent 100%) !important;
-    padding: var(--space-lg) var(--space-sm) var(--space-sm) !important;
+    color: var(--text-secondary);
+}
+
+.cardText-first {
+    color: var(--text-primary);
+}
+
+.cardText-secondary {
+    color: var(--text-muted);
+}
+
+.layout-tv .card.show-focus:focus .cardText {
+    color: var(--text-primary);
 }
 
 /* Library grid density modes */
-/* Compact */
-[data-grid-density="compact"] .card,
-[data-grid-density="compact"] .cardContent {
-    font-size: 0.75rem !important;
+[data-grid-density="compact"] .card {
+    font-size: 0.85em;
 }
 
-[data-grid-density="compact"] .cardImageContainer {
-    padding-bottom: 130% !important;
-}
-
-/* Spacious */
-[data-grid-density="spacious"] .card,
-[data-grid-density="spacious"] .cardContent {
-    font-size: 0.9rem !important;
-}
-
-[data-grid-density="spacious"] .cardImageContainer {
-    padding-bottom: 160% !important;
+[data-grid-density="spacious"] .card {
+    font-size: 1.1em;
 }

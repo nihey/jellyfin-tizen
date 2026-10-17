@@ -5,6 +5,7 @@ import { deleteAsync as del } from 'del';
 import dom from 'gulp-dom';
 import path from 'path';
 import scan from 'gulp-scan';
+import { Transform } from 'stream';
 
 // Allow overriding of jellyfin-web directory
 let WEB_DIR = process.env.JELLYFIN_WEB_DIR || 'node_modules/jellyfin-web/dist';
@@ -55,9 +56,39 @@ function searchFonts() {
         }));
 }
 
-// Copy unmodified assets
+// jellyfin-web's accent blue -> AT Flix accent variables (theme/variables.css)
+const ACCENT_COLORS = [
+    [/#00a4d[bc]\b/gi, 'var(--accent-color, #e50914)'],
+    [/#0cb0e8\b/gi, 'var(--accent-hover, #f6121d)'],
+    [/#44bae1\b/gi, 'var(--accent-light, #ff4d55)'],
+    [/#007ea8\b/gi, 'var(--accent-dark, #b20710)'],
+    [/#(00455c|1c4c5c)\b/gi, 'var(--accent-darker, #5c0409)'],
+    [/rgba\(\s*0\s*,\s*164\s*,\s*220\s*,\s*([\d.]+)\s*\)/gi, 'rgba(229, 9, 20, $1)']
+];
+
+// Recolor jellyfin-web CSS; other selectable themes keep their own palettes
+function recolorCss() {
+    return new Transform({
+        objectMode: true,
+        transform(file, encoding, callback) {
+            const relative = file.relative.split(path.sep).join('/');
+            const otherTheme = relative.startsWith('themes/') && !relative.startsWith('themes/dark/');
+            if (file.isBuffer() && file.extname === '.css' && !otherTheme) {
+                let css = file.contents.toString('utf8');
+                for (const [pattern, replacement] of ACCENT_COLORS) {
+                    css = css.replace(pattern, replacement);
+                }
+                file.contents = Buffer.from(css, 'utf8');
+            }
+            callback(null, file);
+        }
+    });
+}
+
+// Copy jellyfin-web assets (CSS recolored)
 function copy() {
     return gulp.src(paths.assets.src, { encoding: false })
+        .pipe(recolorCss())
         .pipe(gulp.dest(paths.assets.dest));
 }
 
@@ -90,13 +121,14 @@ function modifyIndex() {
             // inject theme CSS files
             const themeCss = [
                 'theme/variables.css',
+                'theme/fonts.css',
                 'theme/animations.css',
                 'theme/cinematic.css',
                 'theme/components/cards.css',
                 'theme/components/navigation.css',
-                'theme/components/hero.css',
                 'theme/components/detail.css',
-                'theme/components/overlays.css'
+                'theme/components/overlays.css',
+                'theme/components/login.css'
             ];
             themeCss.forEach((cssPath) => {
                 if (fs.existsSync(cssPath)) {

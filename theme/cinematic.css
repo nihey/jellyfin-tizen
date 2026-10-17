@@ -1,94 +1,66 @@
 /* theme/cinematic.css
-   High-level layout overrides for the cinematic Netflix-style experience.
-   This file ties together all component styles.
+   Global look for the cinematic Netflix-style experience.
+   Rules here only restyle; scrolling, page transitions and loading spinners are
+   left to jellyfin-web, whose TV code already animates them on the compositor.
 */
 
-/* Global background override */
-body,
-.backgroundContainer,
-.skinContainer {
-    background: var(--bg-primary) !important;
-    color: var(--text-primary) !important;
+/* Global background. Not on body: an opaque body would paint over jellyfin's
+   backdrop layer, which sits behind the page at z-index -1. */
+html,
+.backgroundContainer {
+    background-color: var(--bg-primary) !important;
+    color: var(--text-primary);
 }
 
-/* Page content transitions */
-.view,
-.page {
-    transition: opacity var(--transition-base) ease-out !important;
+/* With "Backdrops" on, keep the item art visible on the right and dark behind text */
+.backgroundContainer.withBackdrop {
+    background: linear-gradient(to right, rgba(10, 10, 15, 0.96) 0%, rgba(10, 10, 15, 0.86) 50%, rgba(10, 10, 15, 0.72) 100%) !important;
 }
 
-/* Scrollable rows: horizontal snap */
-.itemsContainer,
-.vertical-wrap,
-.scrollSlider {
-    scroll-behavior: smooth !important;
+.sectionTitle,
+.pageTitle,
+h1,
+h2,
+h3 {
+    font-weight: 600;
+    letter-spacing: -0.01em;
 }
 
-/* Ensure scroll snap on horizontal rows */
-.itemsContainer.horizontal-wrap {
-    scroll-snap-type: x mandatory !important;
-}
-
-.itemsContainer.horizontal-wrap .card {
-    scroll-snap-align: start !important;
-}
-
-/* Reduce motion if user prefers */
-@media (prefers-reduced-motion: reduce) {
-    :root {
-        --animation-speed: 0.001;
-    }
-}
-
-/* Loading spinner replacement with skeleton */
-.spinner {
-    background: none !important;
-    border: none !important;
-    width: 100% !important;
-    height: 100% !important;
-}
-
-.spinner::after {
-    content: '' !important;
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
+/* Buttons: rounded rectangles; focused = white with dark text (TV style) */
+.raised,
+.button-submit,
+.fab {
     border-radius: var(--card-radius) !important;
-    background: linear-gradient(
-        90deg,
-        var(--bg-surface, #141419) 25%,
-        var(--skeleton-highlight, #2a2a35) 50%,
-        var(--bg-surface, #141419) 75%
-    ) !important;
-    background-size: 200% 100% !important;
-    animation: skeleton-shimmer calc(1.5s / var(--animation-speed, 1)) linear infinite !important;
 }
 
-/* Emby button overrides for pill shape */
-.emby-button {
-    border-radius: 999px !important;
+/* jellyfin's TV focus fills buttons, pickers and selects with the accent color;
+   AT Flix keeps the accent for primary actions and progress, and focus is white */
+.layout-tv .emby-button.show-focus:focus,
+.layout-tv .alphaPickerButton-tv:focus,
+.layout-tv .emby-select-tv-withcolor:focus {
+    background: var(--focus-color) !important;
+    color: #000 !important;
 }
 
-/* Input fields */
+.layout-tv .raised.show-focus:focus,
+.layout-tv .button-submit.show-focus:focus,
+.layout-tv .fab.show-focus:focus {
+    transform: scale(1.04);
+}
+
+/* Inputs */
 .emby-input,
-.emby-textarea {
+.emby-textarea,
+.emby-select {
     background: var(--bg-surface) !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
     border-radius: var(--card-radius) !important;
     color: var(--text-primary) !important;
 }
 
 .emby-input:focus,
-.emby-textarea:focus {
-    border-color: var(--accent-color) !important;
-    box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.3) !important;
-}
-
-/* Selection indicators */
-.checkboxIcon-checked {
-    background: var(--accent-color) !important;
-}
-
-.mdl-slider::-webkit-slider-thumb {
-    background: var(--accent-color) !important;
+.emby-textarea:focus,
+.emby-select:focus {
+    border-color: var(--focus-color) !important;
+    box-shadow: var(--focus-ring) !important;
 }

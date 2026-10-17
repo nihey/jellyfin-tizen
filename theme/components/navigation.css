@@ -1,53 +1,43 @@
-/* theme/components/navigation.css */
+/* theme/components/navigation.css
+   In TV layout jellyfin-web keeps the header in the page flow at the top
+   (position: relative), so it scrolls away with the page; we only restyle it.
+*/
 
-/* Top navigation bar */
-.skinHeader {
-    background: linear-gradient(to bottom, var(--bg-primary) 0%, transparent 100%) !important;
-    border-bottom: none !important;
-    backdrop-filter: none !important;
-    transition: opacity var(--transition-base) ease-out !important;
+.layout-tv .skinHeader,
+.layout-tv .skinHeader-withBackground {
+    background: transparent !important;
+    color: var(--text-primary);
 }
 
-.skinHeader.scrolled {
-    background: var(--bg-overlay) !important;
-    backdrop-filter: blur(12px) !important;
+/* AT Flix logo instead of the Jellyfin one */
+.layout-tv .pageTitleWithDefaultLogo {
+    background-image: url(../assets/atflix-logo.png) !important;
 }
 
-/* Hide top bar when user scrolls down (TV auto-hide feel) */
-.skinHeader.hidden {
-    opacity: 0 !important;
-    pointer-events: none !important;
+/* Header icon buttons (back, home, search, user): white disc when focused */
+.layout-tv .skinHeader .paper-icon-button-light.show-focus:focus {
+    background: var(--focus-color) !important;
+    color: #000 !important;
 }
 
-/* Focus ring for nav items */
-.headerButton,
-.navMenuOption,
-.raised {
-    border-radius: var(--card-radius) !important;
-    transition: background var(--transition-fast), box-shadow var(--transition-fast) !important;
+/* Tabs: grey, active one white with an accent underline, focused one white */
+.emby-tab-button {
+    color: var(--text-secondary);
 }
 
-.headerButton:focus,
-.navMenuOption:focus,
-.raised:focus {
-    box-shadow: var(--focus-ring) !important;
-    background: var(--bg-surface) !important;
+.emby-tab-button-active {
+    color: var(--text-primary) !important;
+    box-shadow: inset 0 -0.15em 0 var(--accent-color);
 }
 
-/* Sidebar */
-.mainDrawer {
-    background: var(--bg-surface) !important;
-    border-right: 1px solid rgba(255,255,255,0.05) !important;
+.layout-tv .emby-tab-button.show-focus:focus {
+    color: var(--text-primary) !important;
+    transform: scale(1.15) !important;
 }
 
-.mainDrawer .navMenuOption {
-    border-radius: 0 var(--card-radius) var(--card-radius) 0 !important;
-    margin-right: var(--space-sm) !important;
-}
-
-.mainDrawer .navMenuOption:focus {
-    background: var(--accent-color) !important;
-    color: #fff !important;
+/* Alphabet picker on library pages (focus style in cinematic.css) */
+.alphaPickerButton {
+    color: var(--text-muted);
 }
 
 /* Scrollbar (minimal) */
@@ -55,9 +45,11 @@
     width: 4px;
     height: 4px;
 }
+
 ::-webkit-scrollbar-track {
     background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
     background: var(--text-muted);
     border-radius: 2px;

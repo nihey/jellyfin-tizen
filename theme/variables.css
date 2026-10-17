@@ -8,24 +8,33 @@
     /* Backgrounds */
     --bg-primary: #0a0a0f;
     --bg-surface: #141419;
-    --bg-overlay: rgba(10, 10, 15, 0.85);
+    --bg-elevated: #1f1f27;
+    --bg-overlay: rgba(10, 10, 15, 0.92);
 
     /* Text */
     --text-primary: #ffffff;
     --text-secondary: #a0a0b0;
     --text-muted: #6a6a7a;
 
-    /* Accent */
+    /* Accent. The build recolors jellyfin-web's blue to these variables
+       (see recolorCss in gulpfile.babel.js), so changing them themes everything. */
     --accent-color: #e50914;
-    --accent-hover: #ff1a25;
+    --accent-hover: #f6121d;
+    --accent-light: #ff4d55;
+    --accent-dark: #b20710;
+    --accent-darker: #5c0409;
+    --accent-soft: rgba(229, 9, 20, 0.2);
 
-    /* Focus */
-    --focus-ring: 0 0 0 3px var(--accent-color), 0 0 12px var(--accent-color);
+    /* Focus: one solid white ring, never animated (cheap to paint on the TV) */
+    --focus-color: #ffffff;
+    --focus-ring: 0 0 0 0.2em var(--focus-color);
     --focus-scale: 1.08;
 
     /* Cards */
     --card-radius: 6px;
-    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+
+    /* Typography */
+    --font-family: 'Noto Sans', 'SamsungOne', 'Samsung Sans', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
     /* Spacing (8px grid) */
     --space-xs: 4px;
@@ -41,5 +50,3 @@
     --transition-slow: calc(400ms / var(--animation-speed));
     --skeleton-highlight: #2a2a35;
 }
-
-/* Runtime override: read localStorage and apply as inline style on html element */
