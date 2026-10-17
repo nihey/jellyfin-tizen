@@ -211,6 +211,7 @@ Toggle with the `*` (star) key on your Samsung remote. Shows last 100 logs, focu
 This fork includes a cinematic Netflix-style theme and a debug system.
 
 ### Theme Features
+- Animated AT Flix logo while the app boots (`theme/components/splash.css`, `theme/splash.js`): about 1.6 s of intro, then it holds until the first page renders and zooms out. Transform/opacity only, so it stays smooth while the app loads
 - Dark cinematic palette. The build recolors jellyfin-web's blue accent to the AT Flix accent variables (`recolorCss` in `gulpfile.babel.js`), so buttons, progress bars, checkboxes and the player follow it
 - Noto Sans bundled in `theme/fonts/` (SIL OFL 1.1); jellyfin-web is built with system fonts and sets none
 - White focus everywhere: a thin ring around posters, a white fill on buttons, tabs and pickers

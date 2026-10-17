@@ -166,7 +166,8 @@ function modifyIndex() {
                 'theme/components/navigation.css',
                 'theme/components/detail.css',
                 'theme/components/overlays.css',
-                'theme/components/login.css'
+                'theme/components/login.css',
+                'theme/components/splash.css'
             ];
             themeCss.forEach((cssPath) => {
                 if (fs.existsSync(cssPath)) {
@@ -233,7 +234,8 @@ function modifyIndex() {
                 'theme/theme-bridge.js',
                 'theme/tv-alert.js',
                 'theme/login.js',
-                'theme/user-defaults.js'
+                'theme/user-defaults.js',
+                'theme/splash.js'
             ];
             debugJs.forEach((jsPath) => {
                 if (fs.existsSync(jsPath)) {
@@ -261,6 +263,22 @@ function modifyIndex() {
             tizen.setAttribute('src', '../tizen.js');
             tizen.setAttribute('defer', '');
             injectTarget.insertBefore(tizen, apploader);
+
+            // inject the boot animation first in body, so it paints before any app script
+            // runs (theme/components/splash.css, dismissed by theme/splash.js)
+            const splash = this.createElement('div');
+            splash.setAttribute('id', 'atf-splash');
+            splash.innerHTML =
+                '<div class="atf-splash-glow"></div>' +
+                '<div class="atf-splash-logo">' +
+                    '<div class="atf-splash-at"><img src="theme/assets/splash-at.webp" alt=""></div>' +
+                    '<div class="atf-splash-shine"><i></i></div>' +
+                    '<img class="atf-splash-flix" src="theme/assets/splash-flix.webp" alt="">' +
+                '</div>';
+            const splashShownAt = this.createElement('script');
+            splashShownAt.text = 'window.ATFLIX_SPLASH_AT=performance.now();';
+            this.body.insertBefore(splashShownAt, this.body.firstChild);
+            this.body.insertBefore(splash, splashShownAt);
 
             return this;
         }))
