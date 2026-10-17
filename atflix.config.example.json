@@ -1,3 +1,4 @@
 {
-    "defaultServer": "https://jellyfin.example.com"
+    "defaultServer": "https://jellyfin.example.com",
+    "omdbApiKey": "your-omdb-api-key"
 }

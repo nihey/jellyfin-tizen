@@ -2,7 +2,7 @@
    Preloads a Jellyfin server on a fresh install, so the app opens on its
    sign-in screen. The server comes from the local build config
    (atflix.config.json or ATFLIX_DEFAULT_SERVER, never committed), injected by
-   the build as window.ATFLIX_DEFAULT_SERVER. A server the user already added
+   the build into window.ATFLIX_LOCAL_CONFIG. A server the user already added
    is left alone.
 */
 
@@ -11,7 +11,7 @@
 
     var CREDENTIALS_KEY = 'jellyfin_credentials'; // jellyfin-apiclient storage key
     var MANUAL_CONNECTION = 2; // jellyfin-apiclient ConnectionMode.Manual
-    var server = window.ATFLIX_DEFAULT_SERVER;
+    var server = (window.ATFLIX_LOCAL_CONFIG || {}).defaultServer;
 
     if (!server || !server.Id) return;
 

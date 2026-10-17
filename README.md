@@ -145,17 +145,21 @@ The script will:
 5. **Uninstall** the old app
 6. **Install** the new AT Flix app
 
-### Preloading your server
+### Local config (server preload, IMDb ratings)
 
-To have a fresh install open straight on your server's sign-in screen, create `atflix.config.json` (gitignored, keep it local):
+Private per-install settings go in `atflix.config.json` (gitignored, keep it local; see `atflix.config.example.json`):
 
 ```json
 {
-    "defaultServer": "https://jellyfin.example.com"
+    "defaultServer": "https://jellyfin.example.com",
+    "omdbApiKey": "your-omdb-api-key"
 }
 ```
 
-or set `ATFLIX_DEFAULT_SERVER` when building. The build looks up the server's ID (it must be reachable) and injects it into `www/index.html`; `theme/default-server.js` then adds it on first launch. A server already added on the TV is left alone. See `atflix.config.example.json`.
+or the `ATFLIX_DEFAULT_SERVER` / `ATFLIX_OMDB_API_KEY` environment variables. The build injects them into `www/index.html` as `window.ATFLIX_LOCAL_CONFIG`; the config file itself is excluded from the package.
+
+- `defaultServer`: a fresh install opens straight on this server's sign-in screen. The build looks up the server's ID (it must be reachable); `theme/default-server.js` adds it on first launch and leaves a server already added on the TV alone.
+- `omdbApiKey`: shows the IMDb rating on detail pages (`theme/imdb-rating.js`), fetched from [OMDb](https://www.omdbapi.com/apikey.aspx) (free key, 1,000 requests a day) and cached for a week per title.
 
 ### Manual Reinstall (if script fails)
 

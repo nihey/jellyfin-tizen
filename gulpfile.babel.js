@@ -14,10 +14,13 @@ console.info('Using jellyfin-web from', WEB_DIR);
 
 const DISCARD_UNUSED_FONTS = !!process.env.DISCARD_UNUSED_FONTS;
 
-// Optional server preloaded on fresh installs, from the local, untracked
-// atflix.config.json ({ "defaultServer": "https://..." }) or ATFLIX_DEFAULT_SERVER
+// Private per-install settings from the local, untracked atflix.config.json
+// (see atflix.config.example.json) or environment variables. Injected into
+// www/index.html as window.ATFLIX_LOCAL_CONFIG, never committed:
+//   defaultServer - server preloaded on fresh installs (ATFLIX_DEFAULT_SERVER)
+//   omdbApiKey    - OMDb key for IMDb ratings (ATFLIX_OMDB_API_KEY)
 const LOCAL_CONFIG = 'atflix.config.json';
-let defaultServer = null;
+const localConfig = {};
 
 const paths = {
     assets: {
@@ -40,23 +43,30 @@ function clean() {
     ]);
 }
 
-function readDefaultServerAddress() {
-    if (process.env.ATFLIX_DEFAULT_SERVER) return process.env.ATFLIX_DEFAULT_SERVER;
-    if (!fs.existsSync(LOCAL_CONFIG)) return null;
-    return JSON.parse(fs.readFileSync(LOCAL_CONFIG, 'utf8')).defaultServer || null;
+function readLocalConfig() {
+    const file = fs.existsSync(LOCAL_CONFIG) ? JSON.parse(fs.readFileSync(LOCAL_CONFIG, 'utf8')) : {};
+    return {
+        defaultServer: process.env.ATFLIX_DEFAULT_SERVER || file.defaultServer || null,
+        omdbApiKey: process.env.ATFLIX_OMDB_API_KEY || file.omdbApiKey || null
+    };
 }
 
 // jellyfin stores servers by Id, so look it up now (the server must be reachable)
-async function resolveDefaultServer() {
-    const address = readDefaultServerAddress();
-    if (!address) return;
+async function resolveLocalConfig() {
+    const config = readLocalConfig();
 
-    const url = address.replace(/\/+$/, '');
+    if (config.omdbApiKey) {
+        localConfig.omdbApiKey = config.omdbApiKey;
+        console.info('IMDb ratings enabled (OMDb key set)');
+    }
+
+    if (!config.defaultServer) return;
+    const url = config.defaultServer.replace(/\/+$/, '');
     try {
         const response = await fetch(url + '/System/Info/Public');
         if (!response.ok) throw new Error('HTTP ' + response.status);
         const info = await response.json();
-        defaultServer = { Id: info.Id, Name: info.ServerName, ManualAddress: url };
+        localConfig.defaultServer = { Id: info.Id, Name: info.ServerName, ManualAddress: url };
         console.info('Preloading server:', info.ServerName);
     } catch (e) {
         console.warn('Default server not reachable, it will not be preloaded:', e.message);
@@ -205,12 +215,12 @@ function modifyIndex() {
                 console.debug('Injected boot-probe JS');
             }
 
-            // inject the preloaded server for theme/default-server.js
-            if (defaultServer) {
-                const serverScript = this.createElement('script');
-                serverScript.text = 'window.ATFLIX_DEFAULT_SERVER=' + JSON.stringify(defaultServer).replace(/</g, '\\u003c') + ';';
-                injectTarget.insertBefore(serverScript, apploader);
-                console.debug('Injected default server');
+            // inject the local config (theme/default-server.js, theme/imdb-rating.js)
+            if (Object.keys(localConfig).length) {
+                const configScript = this.createElement('script');
+                configScript.text = 'window.ATFLIX_LOCAL_CONFIG=' + JSON.stringify(localConfig).replace(/</g, '\\u003c') + ';';
+                injectTarget.insertBefore(configScript, apploader);
+                console.debug('Injected local config:', Object.keys(localConfig).join(', '));
             }
 
             // inject debug JS files (before webapis so they load early)
@@ -219,6 +229,7 @@ function modifyIndex() {
                 'debug/error-handler.js',
                 'debug/debug-overlay.js',
                 'theme/default-server.js',
+                'theme/imdb-rating.js',
                 'theme/theme-bridge.js',
                 'theme/tv-alert.js',
                 'theme/login.js',
@@ -260,7 +271,7 @@ function modifyIndex() {
 const build = gulp.series(
     clean,
     searchFonts,
-    resolveDefaultServer,
+    resolveLocalConfig,
     gulp.parallel(copy, copyLocalAssets, modifyIndex)
 );
 
