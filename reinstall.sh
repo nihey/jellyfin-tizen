@@ -67,7 +67,8 @@ check_prereqs() {
 
 # Ensure jellyfin-web is built
 ensure_jellyfin_web() {
-    local JELLYFIN_WEB_DIR="$SCRIPT_DIR/../jellyfin-web-build/dist"
+    # Not local: it must stay exported for build_web (gulp reads it)
+    JELLYFIN_WEB_DIR="$SCRIPT_DIR/../jellyfin-web-build/dist"
     if [ ! -d "$JELLYFIN_WEB_DIR" ]; then
         log_warn "jellyfin-web dist not found at $JELLYFIN_WEB_DIR"
         log_info "Cloning and building jellyfin-web (this may take a few minutes)..."
@@ -89,7 +90,7 @@ ensure_jellyfin_web() {
         exit 1
     fi
 
-    export JELLYFIN_WEB_DIR="$JELLYFIN_WEB_DIR"
+    export JELLYFIN_WEB_DIR
     log_success "jellyfin-web ready at $JELLYFIN_WEB_DIR"
 }
 
@@ -97,8 +98,8 @@ ensure_jellyfin_web() {
 connect_tv() {
     log_info "Connecting to TV ($TV_TARGET)..."
 
-    # Try to get TV IP from sdb devices
-    TV_IP=$(sdb devices | grep "device" | awk '{print $1}' | head -n 1)
+    # Try to get TV IP from sdb devices (skipping the "List of devices attached" header)
+    TV_IP=$(sdb devices | awk -v t="$TV_TARGET" '$2 == "device" && $3 == t {print $1}' | head -n 1)
     if [ -z "$TV_IP" ]; then
         log_warn "TV not connected via sdb. Trying to auto-discover..."
 
@@ -112,12 +113,14 @@ connect_tv() {
         NETWORK_PREFIX=$(echo "$GATEWAY" | sed 's/\.[0-9]*$//')
         log_info "Scanning ${NETWORK_PREFIX}.0/24 for Samsung TVs..."
 
-        for i in $(seq 1 254); do
-            (timeout 1 bash -c "<\/dev/tcp/${NETWORK_PREFIX}.$i/26101" 2>/dev/null && echo "${NETWORK_PREFIX}.$i") &
-        done
-        wait | grep -v "^$" | head -n 1 > /tmp/atflix_tv_ip.txt
-
-        TV_IP=$(cat /tmp/atflix_tv_ip.txt 2>/dev/null || true)
+        # Probes run inside the substitution so their output is captured
+        TV_IP=$(
+            for i in $(seq 1 254); do
+                (timeout 1 bash -c "<\/dev/tcp/${NETWORK_PREFIX}.$i/26101" 2>/dev/null && echo "${NETWORK_PREFIX}.$i") &
+            done
+            wait
+        )
+        TV_IP=$(echo "$TV_IP" | grep -v "^$" | head -n 1 || true)
         if [ -z "$TV_IP" ]; then
             log_error "Could not find Samsung TV on the network."
             log_info "Make sure your TV is:"
@@ -136,9 +139,9 @@ connect_tv() {
     fi
 
     # Verify connection
-    DEVICE_NAME=$(sdb devices | grep "device" | awk '{print $3}' | head -n 1)
+    DEVICE_NAME=$(sdb devices | awk -v t="$TV_TARGET" '$2 == "device" && $3 == t {print $3}' | head -n 1)
     if [ -z "$DEVICE_NAME" ]; then
-        log_error "TV connected but no device info available"
+        log_error "TV $TV_TARGET is not connected (see 'sdb devices')"
         exit 1
     fi
 
@@ -149,6 +152,11 @@ connect_tv() {
 build_web() {
     log_info "Building web assets..."
     npm run build
+    # Without the jellyfin-web bundle the app boots to a black screen
+    if [ ! -f "$SCRIPT_DIR/www/main.jellyfin.bundle.js" ]; then
+        log_error "www/ has no jellyfin-web bundle (was JELLYFIN_WEB_DIR set?)"
+        exit 1
+    fi
     log_success "Web assets built"
 }
 
@@ -162,7 +170,11 @@ build_tizen() {
 # Package as WGT
 package_wgt() {
     log_info "Packaging as WGT with profile '$SECURITY_PROFILE'..."
+    # Remove stale packages so a failed build never installs an old one
+    rm -f "AT Flix.wgt" ATFlix.wgt
     tizen package -t wgt -s "$SECURITY_PROFILE" -o . -- .buildResult
+    # tizen names the package after <name> in config.xml ("AT Flix")
+    mv "AT Flix.wgt" ATFlix.wgt
     log_success "WGT package created: ATFlix.wgt"
 }
 
