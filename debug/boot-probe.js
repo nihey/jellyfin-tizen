@@ -1,16 +1,10 @@
 /* boot-probe.js
-   Injects a visible probe element immediately to confirm JS is executing.
-   Also adds a CSS-safe-mode toggle (press 0 on remote during boot).
+   CSS-safe-mode toggle (press 0 on remote during boot).
+   A boot that never renders a page is reported by the watchdog in error-handler.js.
 */
 
 (function () {
     'use strict';
-
-    // Inject probe element
-    var probe = document.createElement('div');
-    probe.id = 'atflix-boot-probe';
-    probe.textContent = 'AT Flix booting...';
-    document.documentElement.appendChild(probe);
 
     // Log that we booted
     if (window.console) {
@@ -31,8 +25,10 @@
                 links[i].disabled = true;
             }
         }
+        var probe = document.createElement('div');
+        probe.id = 'atflix-boot-probe';
         probe.textContent = 'SAFE MODE: custom CSS disabled. Reload to re-enable.';
-        probe.style.background = '#ffaa00';
+        document.documentElement.appendChild(probe);
         if (window.console) {
             console.log('[ATFLIX] Safe mode activated — theme CSS disabled');
         }
@@ -46,27 +42,4 @@
             }
         }
     });
-
-    // Hide probe after 3 seconds if app seems to be loading
-    setTimeout(function () {
-        if (!safeMode) {
-            probe.classList.add('hidden');
-        }
-    }, 3000);
-
-    // Global safety: if body stays black for 10 seconds, show warning
-    setTimeout(function () {
-        if (!safeMode) {
-            var bodyBg = window.getComputedStyle(document.body).backgroundColor;
-            var hasContent = document.body.innerHTML.length > 500;
-            if (!hasContent) {
-                probe.classList.remove('hidden');
-                probe.textContent = 'WARNING: No content detected. Press 0 to disable theme CSS.';
-                probe.style.background = '#ffaa00';
-                if (window.console) {
-                    console.warn('[ATFLIX] No content detected after 10s — possible CSS blocking issue');
-                }
-            }
-        }
-    }, 10000);
 })();
