@@ -1,0 +1,142 @@
+/* theme/components/login.css
+   Sign-in screen laid out by theme/login.js: Quick Connect code | password form.
+*/
+
+.atf-login {
+    background: radial-gradient(ellipse at 15% 0%, rgba(229, 9, 20, 0.18), transparent 55%), var(--bg-primary);
+}
+
+.atf-login-columns {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    max-width: 64em;
+    margin: 0 auto;
+}
+
+.atf-qc,
+.atf-login-password {
+    flex: 1;
+    max-width: 26em;
+}
+
+/* Vertical line with "or" in a gap halfway down */
+.atf-login-divider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: stretch;
+    margin: 0 3em;
+    color: var(--text-muted);
+}
+
+.atf-login-divider::before,
+.atf-login-divider::after {
+    content: '';
+    flex: 1;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.atf-login-divider span {
+    padding: 0.5em 0;
+}
+
+.atf-login-title {
+    margin: 0 0 0.3em;
+    font-size: 1.4em;
+    font-weight: 700;
+}
+
+.atf-qc-hint {
+    margin: 0 0 1.2em;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.atf-qc-code {
+    display: flex;
+    margin-bottom: 0.45em;
+}
+
+.atf-qc-code span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.6em;
+    height: 2.1em;
+    margin-right: 0.3em;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.3em;
+    background: var(--bg-elevated);
+    font-size: 1.8em;
+    font-weight: 700;
+}
+
+.atf-qc-code .atf-qc-gap {
+    width: 0.4em;
+    border: 0;
+    background: none;
+}
+
+.atf-qc-status {
+    display: flex;
+    align-items: center;
+    color: var(--text-secondary);
+}
+
+.atf-qc-dot {
+    width: 0.6em;
+    height: 0.6em;
+    margin-right: 0.6em;
+    border-radius: 50%;
+    background: var(--accent-color);
+    animation: atf-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes atf-pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+}
+
+/* jellyfin's own heading and Quick Connect button are replaced by the layout */
+.atf-login .manualLoginForm > div:first-child,
+.atf-login .btnQuick {
+    display: none !important;
+}
+
+.atf-login .manualLoginForm,
+.atf-login .readOnlyContent {
+    width: 100%;
+    max-width: none;
+    margin: 0 !important;
+    padding: 0;
+}
+
+/* Forgot password / Change server as a row of quiet text buttons */
+.atf-login .readOnlyContent {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 1em !important;
+}
+
+.atf-login .readOnlyContent .emby-button {
+    display: inline-flex;
+    width: auto;
+    margin: 0 0.6em 0 0;
+    padding: 0.4em 0.8em;
+    font-size: 0.9em;
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.atf-login .readOnlyContent .emby-button.show-focus:focus {
+    background: var(--focus-color) !important;
+    color: #000 !important;
+}

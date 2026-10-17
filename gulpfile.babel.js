@@ -182,7 +182,10 @@ function modifyIndex() {
                 'debug/logger.js',
                 'debug/error-handler.js',
                 'debug/debug-overlay.js',
-                'theme/theme-bridge.js'
+                'theme/theme-bridge.js',
+                'theme/tv-alert.js',
+                'theme/login.js',
+                'theme/user-defaults.js'
             ];
             debugJs.forEach((jsPath) => {
                 if (fs.existsSync(jsPath)) {
