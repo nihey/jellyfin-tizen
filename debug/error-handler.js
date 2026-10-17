@@ -1,22 +1,29 @@
 /* debug/error-handler.js
    Global error capture and explicit error UI.
-   Hooks window.onerror and unhandled promise rejections.
-   Shows full-screen error page with retry + details.
+   Hooks window.onerror and unhandled promise rejections and logs them (see the
+   debug overlay, * key). jellyfin-web raises many non-fatal ones on the TV's
+   older Chromium (e.g. MediaSession 'seekto' is unsupported on Tizen 6), so the
+   full-screen error page with retry + details is reserved for a boot that
+   never renders a page.
 */
 
 (function () {
     'use strict';
 
+    var BOOT_TIMEOUT_MS = 20000;
+
     var ERROR_CODES = {
         NETWORK_TIMEOUT: 'E1001',
         NETWORK_ERROR: 'E1002',
         SERVER_ERROR: 'E2001',
+        BOOT_FAILURE: 'E3001',
         UNKNOWN_ERROR: 'E9000',
         PROMISE_REJECTION: 'E9001'
     };
 
     function getErrorCode(error) {
         if (!error) return ERROR_CODES.UNKNOWN_ERROR;
+        if (error.atflixCode) return error.atflixCode;
         var msg = (error.message || String(error)).toLowerCase();
         if (msg.indexOf('timeout') !== -1) return ERROR_CODES.NETWORK_TIMEOUT;
         if (msg.indexOf('network') !== -1 || msg.indexOf('fetch') !== -1) return ERROR_CODES.NETWORK_ERROR;
@@ -68,7 +75,8 @@
         document.body.appendChild(screen);
 
         var detailsPre = screen.querySelector('.jf-error-details');
-        detailsPre.textContent = 'Error: ' + (error ? error.message || String(error) : 'unknown') + '\n\n' + stack;
+        detailsPre.textContent = 'Error: ' + (error ? error.message || String(error) : 'unknown') + '\n\n' + stack +
+            (context ? '\n\nContext: ' + JSON.stringify(context, null, 2) : '');
 
         screen.querySelector('.jf-error-retry').addEventListener('click', function () {
             screen.remove();
@@ -118,15 +126,45 @@
         getErrorCode: getErrorCode
     };
 
-    // Hook global errors
+    function logError(error, context) {
+        var message = error ? error.message || String(error) : 'unknown';
+        if (!window.JFLogger) {
+            console.error('Error handler loaded before logger:', error);
+            return;
+        }
+        window.JFLogger.error('ErrorHandler', getErrorCode(error) + ': ' + message, {
+            stack: error && error.stack ? error.stack : null,
+            context: context || null
+        });
+    }
+
+    function hasRenderedPage() {
+        return !!document.querySelector('.mainAnimatedPage, .page');
+    }
+
+    // Hook global errors: log only, they are usually not fatal
     window.onerror = function (message, source, lineno, colno, error) {
-        showErrorScreen(error || new Error(message), { source: source, line: lineno, col: colno });
-        return true; // suppress default console
+        logError(error || new Error(message), { source: source, line: lineno, col: colno });
+        return true; // already mirrored to console by the logger
     };
 
     window.addEventListener('unhandledrejection', function (event) {
-        showErrorScreen(event.reason || new Error('Unhandled promise rejection'), { type: 'unhandledrejection' });
+        logError(event.reason || new Error('Unhandled promise rejection'), { type: 'unhandledrejection' });
     });
+
+    // Boot watchdog: if jellyfin-web never renders a page, show the full-screen error
+    setTimeout(function () {
+        if (hasRenderedPage()) return;
+
+        var error = new Error('AT Flix did not finish loading after ' + (BOOT_TIMEOUT_MS / 1000) + 's (no page was rendered).');
+        error.atflixCode = ERROR_CODES.BOOT_FAILURE;
+        var recentErrors = window.JFLogger ? window.JFLogger.getLogs().filter(function (entry) {
+            return entry.level === 'ERROR' || entry.level === 'FATAL';
+        }).map(function (entry) {
+            return entry.message;
+        }) : [];
+        showErrorScreen(error, { recentErrors: recentErrors });
+    }, BOOT_TIMEOUT_MS);
 
     if (window.JFLogger) {
         window.JFLogger.info('ErrorHandler', 'Error handler initialized');
