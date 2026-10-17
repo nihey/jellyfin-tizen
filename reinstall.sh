@@ -65,6 +65,34 @@ check_prereqs() {
     log_success "Prerequisites OK"
 }
 
+# Ensure jellyfin-web is built
+ensure_jellyfin_web() {
+    local JELLYFIN_WEB_DIR="$SCRIPT_DIR/../jellyfin-web-build/dist"
+    if [ ! -d "$JELLYFIN_WEB_DIR" ]; then
+        log_warn "jellyfin-web dist not found at $JELLYFIN_WEB_DIR"
+        log_info "Cloning and building jellyfin-web (this may take a few minutes)..."
+
+        local JELLYFIN_WEB_REPO="$SCRIPT_DIR/../jellyfin-web-build"
+        git clone --depth 1 -b release-10.10.z https://github.com/jellyfin/jellyfin-web.git "$JELLYFIN_WEB_REPO"
+        cd "$JELLYFIN_WEB_REPO"
+        npm ci --no-audit
+        USE_SYSTEM_FONTS=1 npm run build:production
+        cd "$SCRIPT_DIR"
+    fi
+
+    if [ ! -f "$JELLYFIN_WEB_DIR/main.jellyfin.bundle.js" ]; then
+        log_error "jellyfin-web build is incomplete (missing main bundle)."
+        log_info "Please build jellyfin-web manually:"
+        log_info "  cd $SCRIPT_DIR/../jellyfin-web-build"
+        log_info "  npm ci --no-audit"
+        log_info "  USE_SYSTEM_FONTS=1 npm run build:production"
+        exit 1
+    fi
+
+    export JELLYFIN_WEB_DIR="$JELLYFIN_WEB_DIR"
+    log_success "jellyfin-web ready at $JELLYFIN_WEB_DIR"
+}
+
 # Ensure TV is connected
 connect_tv() {
     log_info "Connecting to TV ($TV_TARGET)..."
@@ -172,6 +200,7 @@ main() {
 
     check_prereqs
     connect_tv
+    ensure_jellyfin_web
     build_web
     build_tizen
     package_wgt
