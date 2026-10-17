@@ -48,6 +48,16 @@ h3 {
     transform: scale(1.04);
 }
 
+/* Mouse hover (desktop, pointer remotes) looks like remote focus instead of
+   jellyfin's red-on-dark hover */
+.layout-tv .emby-button:hover:not(:disabled),
+.layout-tv .paper-icon-button-light:hover:not(:disabled),
+.layout-tv .listItemImageButton:hover,
+.layout-tv .alphaPickerButton-tv:hover {
+    background: var(--focus-color) !important;
+    color: #000 !important;
+}
+
 /* Inputs */
 .emby-input,
 .emby-textarea,

@@ -39,12 +39,14 @@
     color: #fff;
 }
 
-/* Focus shows as the white disc only, not the generic white button fill */
-.layout-tv .mainDetailButtons .detailButton.show-focus:focus {
+/* Focus and hover show as the white disc only, not the generic white button fill */
+.layout-tv .mainDetailButtons .detailButton.show-focus:focus,
+.layout-tv .mainDetailButtons .detailButton:hover:not(:disabled) {
     background: transparent !important;
 }
 
-.layout-tv .mainDetailButtons .detailButton.show-focus:focus .detailButton-content {
+.layout-tv .mainDetailButtons .detailButton.show-focus:focus .detailButton-content,
+.layout-tv .mainDetailButtons .detailButton:hover:not(:disabled) .detailButton-content {
     background: var(--focus-color);
     color: #000;
 }
