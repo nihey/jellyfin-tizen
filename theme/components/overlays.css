@@ -22,8 +22,12 @@
     z-index: 9999 !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: var(--space-sm) !important;
     pointer-events: none !important;
+}
+
+/* Spacing between toasts (flex gap needs Chromium 84+, Tizen 6.0 is 76) */
+.jf-toast-container > * + * {
+    margin-top: var(--space-sm) !important;
 }
 
 /* Individual toast */
@@ -54,7 +58,10 @@
 /* Error screen */
 .jf-error-screen {
     position: fixed !important;
-    inset: 0 !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
     background: var(--bg-primary) !important;
     display: flex !important;
     flex-direction: column !important;
@@ -163,7 +170,10 @@
     overflow-y: auto !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 2px !important;
+}
+
+.jf-debug-overlay .jf-debug-log + .jf-debug-log {
+    margin-top: 2px !important;
 }
 
 .jf-debug-overlay .jf-debug-log {

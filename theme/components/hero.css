@@ -16,7 +16,10 @@
 .jf-hero .backdropImage,
 .backdropImage {
     position: absolute !important;
-    inset: 0 !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
     object-fit: cover !important;
     z-index: 0 !important;
     border-radius: var(--card-radius) !important;
@@ -28,7 +31,10 @@
 .backdropContainer::after {
     content: '' !important;
     position: absolute !important;
-    inset: 0 !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
     background: linear-gradient(
         to top,
         var(--bg-primary) 0%,
