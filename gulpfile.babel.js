@@ -14,6 +14,11 @@ console.info('Using jellyfin-web from', WEB_DIR);
 
 const DISCARD_UNUSED_FONTS = !!process.env.DISCARD_UNUSED_FONTS;
 
+// Optional server preloaded on fresh installs, from the local, untracked
+// atflix.config.json ({ "defaultServer": "https://..." }) or ATFLIX_DEFAULT_SERVER
+const LOCAL_CONFIG = 'atflix.config.json';
+let defaultServer = null;
+
 const paths = {
     assets: {
         src: [
@@ -33,6 +38,29 @@ function clean() {
     return del([
         'www'
     ]);
+}
+
+function readDefaultServerAddress() {
+    if (process.env.ATFLIX_DEFAULT_SERVER) return process.env.ATFLIX_DEFAULT_SERVER;
+    if (!fs.existsSync(LOCAL_CONFIG)) return null;
+    return JSON.parse(fs.readFileSync(LOCAL_CONFIG, 'utf8')).defaultServer || null;
+}
+
+// jellyfin stores servers by Id, so look it up now (the server must be reachable)
+async function resolveDefaultServer() {
+    const address = readDefaultServerAddress();
+    if (!address) return;
+
+    const url = address.replace(/\/+$/, '');
+    try {
+        const response = await fetch(url + '/System/Info/Public');
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const info = await response.json();
+        defaultServer = { Id: info.Id, Name: info.ServerName, ManualAddress: url };
+        console.info('Preloading server:', info.ServerName);
+    } catch (e) {
+        console.warn('Default server not reachable, it will not be preloaded:', e.message);
+    }
 }
 
 // Search for used fonts and add them to assets
@@ -177,11 +205,20 @@ function modifyIndex() {
                 console.debug('Injected boot-probe JS');
             }
 
+            // inject the preloaded server for theme/default-server.js
+            if (defaultServer) {
+                const serverScript = this.createElement('script');
+                serverScript.text = 'window.ATFLIX_DEFAULT_SERVER=' + JSON.stringify(defaultServer).replace(/</g, '\\u003c') + ';';
+                injectTarget.insertBefore(serverScript, apploader);
+                console.debug('Injected default server');
+            }
+
             // inject debug JS files (before webapis so they load early)
             const debugJs = [
                 'debug/logger.js',
                 'debug/error-handler.js',
                 'debug/debug-overlay.js',
+                'theme/default-server.js',
                 'theme/theme-bridge.js',
                 'theme/tv-alert.js',
                 'theme/login.js',
@@ -223,6 +260,7 @@ function modifyIndex() {
 const build = gulp.series(
     clean,
     searchFonts,
+    resolveDefaultServer,
     gulp.parallel(copy, copyLocalAssets, modifyIndex)
 );
 

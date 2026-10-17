@@ -163,7 +163,7 @@ build_web() {
 # Build the Tizen package
 build_tizen() {
     log_info "Building Tizen web package..."
-    tizen build-web -e ".*" -e gulpfile.babel.js -e README.md -e "node_modules/*" -e "package*.json" -e "yarn.lock"
+    tizen build-web -e ".*" -e gulpfile.babel.js -e README.md -e "node_modules/*" -e "package*.json" -e "yarn.lock" -e "atflix.config*.json"
     log_success "Tizen web package built"
 }
 

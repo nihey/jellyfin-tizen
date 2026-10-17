@@ -73,7 +73,7 @@ If any changes are made to `jellyfin-web/dist/`, the `jellyfin-tizen/www/` direc
 > Make sure you select the appropriate Certificate Profile in Tizen Certificate Manager. This determines which devices you can install the widget on.
 
 ```sh
-tizen build-web -e ".*" -e gulpfile.babel.js -e README.md -e "node_modules/*" -e "package*.json" -e "yarn.lock"
+tizen build-web -e ".*" -e gulpfile.babel.js -e README.md -e "node_modules/*" -e "package*.json" -e "yarn.lock" -e "atflix.config*.json"
 tizen package -t wgt -o . -- .buildResult
 ```
 
@@ -145,6 +145,18 @@ The script will:
 5. **Uninstall** the old app
 6. **Install** the new AT Flix app
 
+### Preloading your server
+
+To have a fresh install open straight on your server's sign-in screen, create `atflix.config.json` (gitignored, keep it local):
+
+```json
+{
+    "defaultServer": "https://jellyfin.example.com"
+}
+```
+
+or set `ATFLIX_DEFAULT_SERVER` when building. The build looks up the server's ID (it must be reachable) and injects it into `www/index.html`; `theme/default-server.js` then adds it on first launch. A server already added on the TV is left alone. See `atflix.config.example.json`.
+
 ### Manual Reinstall (if script fails)
 
 If you prefer to run the steps manually:
@@ -154,7 +166,7 @@ If you prefer to run the steps manually:
 npm run build
 
 # Package
-tizen build-web -e ".*" -e gulpfile.babel.js -e README.md -e "node_modules/*" -e "package*.json" -e "yarn.lock"
+tizen build-web -e ".*" -e gulpfile.babel.js -e README.md -e "node_modules/*" -e "package*.json" -e "yarn.lock" -e "atflix.config*.json"
 tizen package -t wgt -s apps2samsung -o . -- .buildResult
 
 # Install (replace QN55Q70AAGXZD with your TV model)
