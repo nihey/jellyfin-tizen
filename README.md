@@ -166,6 +166,8 @@ tizen install -n ATFlix.wgt -t QN55Q70AAGXZD
 
 ## Screenshots
 
+These are design mockups (`screenshots/mockup.html`), not captures of the running app.
+
 ### Home Screen
 Cinematic hero banner with horizontal scrollable poster rows and snap-to-focus.
 
@@ -193,19 +195,23 @@ Toggle with the `*` (star) key on your Samsung remote. Shows last 100 logs, focu
 This fork includes a cinematic Netflix-style theme and a debug system.
 
 ### Theme Features
-- Dark cinematic color palette with customizable accent color
-- Horizontal scrollable rows with snap-to-focus
-- Hero banners on home and detail pages
+- Dark cinematic palette. The build recolors jellyfin-web's blue accent to the AT Flix accent variables (`recolorCss` in `gulpfile.babel.js`), so buttons, progress bars, checkboxes and the player follow it
+- Noto Sans bundled in `theme/fonts/` (SIL OFL 1.1); jellyfin-web is built with system fonts and sets none
+- White focus everywhere: a thin ring around posters, a white fill on buttons, tabs and pickers
+- Item backdrop art behind library and detail pages, on by default (Settings → Display → Backdrops)
+- Sign-in screen with the Quick Connect code shown automatically next to the password form; the app signs in by itself once the code is approved (`theme/login.js`)
+- The native `alert()` popup, which freezes the app on Tizen 3–7, is replaced by a non-blocking dialog (`theme/tv-alert.js`)
 - Adjustable grid density (compact / comfortable / spacious)
-- Smooth page transitions and skeleton loaders
+
+### Performance on the TV
+jellyfin-web treats every TV as a slow device: posters don't zoom and focus is not animated. The theme keeps that model: no extra GPU layers per card, no animated shadows, no `backdrop-filter` blur, and no scroll-snap or smooth-scroll overrides fighting jellyfin's own focus scrolling.
 
 ### Customization
 Theme settings are stored in `localStorage` under key `at-flix-theme`.
 You can customize:
 - Background and surface colors
-- Accent color
+- Accent color (applies to jellyfin-web's own UI too)
 - Card border radius
-- Focus scale
 - Animation speed
 - Grid density
 
