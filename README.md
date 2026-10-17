@@ -123,6 +123,47 @@ tizen package -t wgt -o . -- .buildResult
    ```
    > Specify target with `-t` option. Use `sdb devices` to list them.
 
+## Quick Reinstall Script
+
+A convenience script is provided to rebuild and reinstall AT Flix on your Samsung TV in one step.
+
+### Prerequisites
+- Your Samsung TV must be in **Developer Mode** and on the same Wi-Fi network
+- Tizen Studio CLI must be installed at `~/tizen-studio` (the installer is auto-detected)
+
+### Usage
+
+```sh
+./reinstall.sh
+```
+
+The script will:
+1. **Auto-detect** your Samsung TV on the local network
+2. **Connect** via `sdb`
+3. **Build** the web assets (`npm run build`)
+4. **Package** the Tizen WGT file
+5. **Uninstall** the old app
+6. **Install** the new AT Flix app
+
+### Manual Reinstall (if script fails)
+
+If you prefer to run the steps manually:
+
+```sh
+# Build
+npm run build
+
+# Package
+tizen build-web -e ".*" -e gulpfile.babel.js -e README.md -e "node_modules/*" -e "package*.json" -e "yarn.lock"
+tizen package -t wgt -s apps2samsung -o . -- .buildResult
+
+# Install (replace QN55Q70AAGXZD with your TV model)
+tizen uninstall -t QN55Q70AAGXZD -p AprZAARz4r.Jellyfin
+tizen install -n ATFlix.wgt -t QN55Q70AAGXZD
+```
+
+---
+
 ## UI Customization & Debug
 
 This fork includes a cinematic Netflix-style theme and a debug system.
