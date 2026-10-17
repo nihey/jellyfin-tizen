@@ -177,7 +177,7 @@ Full-bleed backdrop with floating info panel, cast row, and similar items.
 ![Detail Page](screenshots/detail.png)
 
 ### Error Handling
-Explicit error screen with friendly message, error code, retry button, and expandable technical details.
+Explicit error screen with friendly message, error code, retry button, and expandable technical details, shown when the app fails to boot. Non-fatal errors go to the debug overlay.
 
 ![Error Screen](screenshots/error.png)
 
@@ -217,8 +217,15 @@ It shows:
 - Performance metrics
 
 ### Error Handling
-Errors display a full-screen page with:
+Uncaught errors and unhandled promise rejections are logged with their code, message and stack, and listed in red in the debug overlay. They don't interrupt the UI: jellyfin-web raises several harmless ones on the TV's older Chromium (e.g. MediaSession `seekto` is unsupported on Tizen 6.0).
+
+If the app never renders a page within 20 seconds, a full-screen error page is shown with:
 - Friendly error message
-- Error code (e.g., `E1001`)
+- Error code (`E3001` for a failed boot)
 - Retry button
-- Expandable technical details
+- Expandable technical details, including the errors logged during boot
+
+Press `0` within 5 seconds of launch to start in safe mode (theme CSS disabled).
+
+### Tizen 6.0 compatibility
+2021 TVs run Tizen 6.0, whose web engine is Chromium 76. Theme CSS must avoid newer features such as `inset`, flexbox `gap`, `aspect-ratio`, `clamp()`/`min()`/`max()` and `:is()`/`:where()`.
