@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+
+  /* Base TV frame */
+  body {
+    margin: 0;
+    background: #000;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+
+  .tv-screen {
+    width: 1920px;
+    height: 1080px;
+    position: relative;
+    overflow: hidden;
+    background: #0a0a0f;
+    color: #fff;
+    margin-bottom: 40px;
+  }
+
+  /* Screen 1: Home */
+  .hero-banner {
+    position: relative;
+    width: 100%;
+    height: 55vh;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+    display: flex;
+    align-items: flex-end;
+    padding: 48px 64px;
+    box-sizing: border-box;
+  }
+
+  .hero-banner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, #0a0a0f 0%, rgba(10,10,15,0.6) 50%, rgba(10,10,15,0.2) 100%);
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 50%;
+  }
+
+  .hero-title {
+    font-size: 64px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    text-shadow: 0 4px 16px rgba(0,0,0,0.6);
+  }
+
+  .hero-desc {
+    color: #a0a0b0;
+    font-size: 20px;
+    line-height: 1.5;
+    margin-bottom: 32px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  }
+
+  .hero-btn {
+    background: #e50914;
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 16px 40px;
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+  }
+
+  .hero-btn:focus {
+    outline: 3px solid #e50914;
+    outline-offset: 4px;
+    box-shadow: 0 0 0 3px #e50914, 0 0 20px #e50914;
+  }
+
+  /* Poster rows */
+  .section-title {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 32px 64px 16px;
+    color: #fff;
+  }
+
+  .poster-row {
+    display: flex;
+    gap: 16px;
+    padding: 0 64px 32px;
+    overflow-x: auto;
+  }
+
+  .poster-card {
+    flex-shrink: 0;
+    width: 240px;
+    height: 360px;
+    background: #1a1a2e;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.15s ease-out;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  }
+
+  .poster-card.focused {
+    transform: scale(1.08);
+    box-shadow: 0 0 0 3px #e50914, 0 0 20px #e50914, 0 8px 24px rgba(0,0,0,0.6);
+    z-index: 10;
+  }
+
+  .poster-img {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #2a2a4a 0%, #1a1a2e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #6a6a7a;
+  }
+
+  .poster-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 48px 12px 12px;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, transparent 100%);
+    font-size: 14px;
+    color: #fff;
+  }
+
+  /* Screen 2: Detail */
+  .detail-backdrop {
+    position: relative;
+    width: 100%;
+    height: 70vh;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    overflow: hidden;
+    border-radius: 0 0 6px 6px;
+  }
+
+  .detail-backdrop::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, #0a0a0f 0%, rgba(10,10,15,0.8) 50%, rgba(10,10,15,0.3) 100%);
+    pointer-events: none;
+  }
+
+  .detail-info {
+    position: relative;
+    z-index: 2;
+    margin-top: -20vh;
+    padding: 0 64px 48px;
+  }
+
+  .detail-title {
+    font-size: 56px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .detail-meta {
+    color: #a0a0b0;
+    font-size: 18px;
+    margin-bottom: 24px;
+  }
+
+  .detail-desc {
+    color: #a0a0b0;
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 600px;
+    margin-bottom: 32px;
+  }
+
+  .detail-actions {
+    display: flex;
+    gap: 16px;
+  }
+
+  .btn-primary {
+    background: #e50914;
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 16px 40px;
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .btn-secondary {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 16px 40px;
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .cast-row {
+    display: flex;
+    gap: 16px;
+    padding: 32px 64px;
+  }
+
+  .cast-card {
+    width: 140px;
+    text-align: center;
+  }
+
+  .cast-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2a2a4a, #1a1a2e);
+    margin: 0 auto 12px;
+  }
+
+  .cast-name {
+    font-size: 14px;
+    color: #fff;
+  }
+
+  /* Screen 3: Error */
+  .error-screen {
+    width: 100%;
+    height: 100%;
+    background: #0a0a0f;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 64px;
+  }
+
+  .error-code {
+    font-family: monospace;
+    color: #6a6a7a;
+    font-size: 14px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .error-title {
+    font-size: 48px;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+
+  .error-msg {
+    color: #a0a0b0;
+    font-size: 22px;
+    margin-bottom: 40px;
+    max-width: 600px;
+  }
+
+  .error-actions {
+    display: flex;
+    gap: 16px;
+  }
+
+  /* Screen 4: Debug overlay */
+  .debug-screen {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: #0a0a0f;
+  }
+
+  .debug-bg-content {
+    padding: 48px 64px;
+    opacity: 0.3;
+  }
+
+  .debug-overlay-panel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40vh;
+    background: rgba(10, 10, 15, 0.85);
+    backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    flex-direction: column;
+    padding: 24px 32px;
+    font-family: monospace;
+    font-size: 14px;
+    color: #a0a0b0;
+    box-sizing: border-box;
+  }
+
+  .debug-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .debug-title {
+    font-weight: 600;
+    color: #fff;
+    font-size: 18px;
+  }
+
+  .debug-meta {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 12px;
+    font-size: 13px;
+  }
+
+  .debug-logs {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .debug-log {
+    padding: 2px 0;
+  }
+
+  .debug-log-error { color: #ff6b6b; }
+  .debug-log-warn  { color: #ffd93d; }
+  .debug-log-debug { color: #6bcb77; }
+
+  /* Nav bar */
+  .nav-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    padding: 0 64px;
+    gap: 32px;
+    background: linear-gradient(to bottom, #0a0a0f 0%, transparent 100%);
+    z-index: 100;
+  }
+
+  .nav-logo {
+    font-size: 28px;
+    font-weight: 800;
+    color: #e50914;
+    letter-spacing: 2px;
+  }
+
+  .nav-item {
+    font-size: 18px;
+    color: #a0a0b0;
+    cursor: pointer;
+  }
+
+  .nav-item.active {
+    color: #fff;
+    font-weight: 600;
+  }
+
+body { margin: 0; background: #000; }
+.tv-screen { margin: 0; }
+</style>
+</head>
+<body>
+<div class="tv-screen" id="screen-debug">
+  <div class="debug-screen">
+    <div class="debug-bg-content">
+      <div style="font-size: 48px; font-weight: 700; margin-bottom: 24px;">Home</div>
+</body>
+</html>
