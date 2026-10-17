@@ -30,9 +30,20 @@
     box-shadow: inset 0 -0.15em 0 var(--accent-color);
 }
 
+/* Tabs are emby-buttons, which cinematic.css fills white on focus. A tab is as
+   tall as the header, so put a compact white pill around its label instead
+   (negative margins keep the layout from shifting). */
 .layout-tv .emby-tab-button.show-focus:focus {
-    color: var(--text-primary) !important;
-    transform: scale(1.15) !important;
+    background: transparent !important;
+    transform: none !important;
+}
+
+.layout-tv .emby-tab-button.show-focus:focus .emby-button-foreground {
+    margin: -0.3em -0.8em;
+    padding: 0.3em 0.8em;
+    border-radius: 999px;
+    background: var(--focus-color);
+    color: #000;
 }
 
 /* Alphabet picker on library pages (focus style in cinematic.css) */
